@@ -1,0 +1,44 @@
+# Path 
+stacked_file = '/Users/brooklyngustaf/Desktop/research/Brooklyn_NEID_spectra_project/l2fits/TIC_63082902_all_fits_deblazed_orders.fits'
+
+hdul = fits.open(stacked_file)
+hdul.info()
+
+# Extract arrays
+waves = hdul['WAVELENGTH'].data   # shape (122, Npix)
+fluxes = hdul['FLUX'].data        # shape (122, Npix)
+info = hdul['ORDER_INFO'].data
+
+# Info
+print(f"Shape of WAVELENGTH array: {waves.shape}")
+print(f"Shape of FLUX array: {fluxes.shape}")
+order_info_table = Table(info)
+print(order_info_table[-10:])
+print(order_info_table[:53])
+print({info.shape})
+
+# Orders: H-alpha (80), H-beta (47), Ca II H&K (18 and 17), Ca II Triplet (101 and 102)
+#         Na I Doublet (69), H-Gamma (32)
+# Vacuum Wavelengths: H-alpha (6564.614), H-beta (4862.721), Ca II H&K (3969.29, 3934.77), Ca II Triplet (8500.35, 8544.44, and 8664.52)
+#                     Na I Doublet (5891.58, 5897.56), H-gamma (4340.46)
+order = 80
+# vacuum = 6564.614
+
+wave = waves[order]
+flux = fluxes[order]
+
+# Plot
+plt.figure(figsize=(12,4))
+plt.plot(wave, flux, linewidth=0.6, color='royalblue')
+
+plt.title(f"Echelle Order {order}")
+plt.xlabel("Wavelength (Å)")
+plt.ylabel("Flux")
+# plt.xlim(vacuum - 10, vacuum +10)
+# plt.axvline(x=vacuum, color='green', linestyle='--')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+# Close file when done
+hdul.close()

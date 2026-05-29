@@ -1,0 +1,19 @@
+name: fit_spectra
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - ipykernel
+  - matplotlib
+  - numpy
+  - pandas
+  - specutils
+  - python=3.12
+  - pip
+  - pip:
+    - git+https://github.com/Caltech-IPAC/pyNEID.git
+    - astropy
+    - astroquery
+    - scipy
+
