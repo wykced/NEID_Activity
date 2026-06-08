@@ -1,6 +1,6 @@
 __pycache__/
 .ipynb_checkpoints/
 .DS_Store
-.fits
-.log
-.txt
+*.fits
+*.log
+*.txt
