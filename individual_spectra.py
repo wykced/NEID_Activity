@@ -142,67 +142,98 @@ def plot_spectrum(order, vacuum):
 
 #%%
 
-path = '/Users/brooklyngustaf/Desktop/research/Brooklyn_NEID_spectra_project/l2fits/'
+path = '/Users/brooklyngustaf/Desktop/Research/Brooklyn_NEID_spectra_project/l2fits/'
 
 star = 'TIC_136954576'
 
-folder = path + star + '/'
-files = sorted(glob(os.path.join(folder, '*.fits')))
-
-# Orders: H-alpha (80), H-beta (47), Ca II H&K (18 and 17), Ca II Triplet (101 and 102)
-# Vacuum Wavelengths: H-alpha (6564.614), H-beta (4862.721), Ca II H&K (3969.29, 3934.77), Ca II Triplet (8500.35, 8544.44, and 8664.52)
-
-order = 80
-vacuum = 6564.614
-
-import math
-
-num_files = len(files)
-ncols = 2
-nrows = math.ceil(num_files / ncols)
-
-fig, axes = plt.subplots(
-    nrows,
-    ncols,
-    figsize=(24, 4 * nrows),
-    sharex=True,
-    sharey=True
-)
-
-axes = axes.flatten()  # makes axes[i] work cleanly
-
-
-# # Prepare subplots: one row per file
-# num_files = len(files)
-# fig, axes = plt.subplots(num_files, 1, figsize=(12, 4 * num_files), sharex=True)
-
-if num_files == 1:
-    axes = [axes]  # ensure axes is iterable even if only one plot
-
-for i, file in enumerate(files):
-    rvs, ccf, header = get_ccf(file)
-    wavelengths, flux, header, activity, rv = get_spectral_order(file, order)
-    continuum_fit, lambda_valid, flux_valid, flux_norm = fit_spectrum(wavelengths, flux)
-    # feature_fit, lambda_mask, flux_mask = fit_feature(vacuum - 5, vacuum + 5, vacuum)
-    # ews = get_eqs(order, vacuum)
+tic_id = [
+63939535,
+316316335,
+307786701,
+168707425,
+236017803,
+333166853,
+257304664,
+202364425,
+437054608,
+16117219,
+435238791,
+9429166,
+387424191,
+136954576,
+63082902,
+344713506,
+# 252791409,
+321317174,
+309663455,
+39718658,
+70666120,
+291016095,
+117249718,
+250384503,
+8200813,
+67907704]
 
 
-    ax = axes[i]
-    ax.set_title(f"Star: {header['OBJECT']}   Date: {header['OBSJD']}   RVS: {rv}\nfile = {files[i]}", fontsize=14)
-    ax.xaxis.set_minor_locator(MultipleLocator(0.5))
-    ax.grid(which='major')
-    ax.plot(lambda_valid, flux_norm, linewidth=.6, label='Normalized Spectrum')
-    ax.axvline(x=vacuum, color='green', linestyle='--')
-    ax.set_xlim(vacuum - 10, vacuum + 10)
-    # ax.set_xlim(6562.5, 6567)
-    ax.set_ylim(-1, 5)
-    if i == len(files) - 1:
-        ax.set_xlabel("Wavelength (Å)")
-    ax.set_ylabel("Normalized Flux")
+for tic in tic_id:
+    star = f'TIC_{tic}'
+    folder = path + star + '/'
+    files = sorted(glob(os.path.join(folder, '*.fits')))
+
+    # Orders: H-alpha (80), H-beta (47), Ca II H&K (18 and 17), Ca II Triplet (101 and 102)
+    # Vacuum Wavelengths: H-alpha (6564.614), H-beta (4862.721), Ca II H&K (3969.29, 3934.77), Ca II Triplet (8500.35, 8544.44, and 8664.52)
+
+    order = 80
+    vacuum = 6564.614
+
+    import math
+
+    num_files = len(files)
+    ncols = 2
+    nrows = math.ceil(num_files / ncols)
+
+    fig, axes = plt.subplots(
+        nrows,
+        ncols,
+        figsize=(24, 4 * nrows),
+        sharex=True,
+        sharey=True
+    )
+
+    axes = axes.flatten()  # makes axes[i] work cleanly
 
 
-plt.tight_layout()
-plt.show()
+    # # Prepare subplots: one row per file
+    # num_files = len(files)
+    # fig, axes = plt.subplots(num_files, 1, figsize=(12, 4 * num_files), sharex=True)
+
+    if num_files == 1:
+        axes = [axes]  # ensure axes is iterable even if only one plot
+
+    for i, file in enumerate(files):
+        rvs, ccf, header = get_ccf(file)
+        wavelengths, flux, header, activity, rv = get_spectral_order(file, order)
+        continuum_fit, lambda_valid, flux_valid, flux_norm = fit_spectrum(wavelengths, flux)
+        # feature_fit, lambda_mask, flux_mask = fit_feature(vacuum - 5, vacuum + 5, vacuum)
+        # ews = get_eqs(order, vacuum)
+
+
+        ax = axes[i]
+        ax.set_title(f"Star: {header['OBJECT']}   Date: {header['OBSJD']}   RVS: {rv}\nfile = {files[i]}", fontsize=14)
+        ax.xaxis.set_minor_locator(MultipleLocator(0.5))
+        ax.grid(which='major')
+        ax.plot(lambda_valid, flux_norm, linewidth=.6, label='Normalized Spectrum')
+        ax.axvline(x=vacuum, color='green', linestyle='--')
+        ax.set_xlim(vacuum - 10, vacuum + 10)
+        # ax.set_xlim(6562.5, 6567)
+        ax.set_ylim(-1, 5)
+        if i == len(files) - 1:
+            ax.set_xlabel("Wavelength (Å)")
+        ax.set_ylabel("Normalized Flux")
+
+
+    plt.tight_layout()
+    plt.show()
 
 # %%
 h_alpha = {
